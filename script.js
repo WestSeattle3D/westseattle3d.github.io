@@ -110,49 +110,6 @@ class MeshAnimation {
     }
 }
 
-class ContactForm {
-    constructor() {
-        this.form = document.getElementById('contact-form');
-        this.bindEvents();
-    }
-
-    bindEvents() {
-        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-
-        const formData = new FormData(this.form);
-        const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            message: formData.get('message')
-        };
-
-        const subject = `CAD Services Inquiry from ${data.name}`;
-        const body = `Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`;
-        const mailtoLink = `mailto:sample@cad.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-        window.location.href = mailtoLink;
-
-        this.form.reset();
-        this.showConfirmation();
-    }
-
-    showConfirmation() {
-        const button = this.form.querySelector('.submit-btn');
-        const originalText = button.textContent;
-        button.textContent = 'Message Sent!';
-        button.style.background = '#4CAF50';
-
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.style.background = '#000';
-        }, 3000);
-    }
-}
-
 class SmoothScroll {
     constructor() {
         this.bindEvents();

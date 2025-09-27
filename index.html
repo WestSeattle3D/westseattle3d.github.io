@@ -73,21 +73,30 @@
         <section id="contact" class="section">
             <div class="container">
                 <h2>Get Started</h2>
-                <p>Ready to bring your project to life? Let's discuss your CAD needs.</p>
-                <form id="contact-form" class="contact-form">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Project Details</label>
-                        <textarea id="message" name="message" rows="5" placeholder="Describe your CAD project requirements..." required></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">Send Message</button>
+                <p>Ready to bring your project to life? Let's discuss your needs.</p>
+                <form
+                    action="https://formspree.io/f/myznkwde"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="contact-form"
+                >
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Your email:</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Message:</label>
+                    <textarea name="message" rows="7" placeholder="Describe your project requirements..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="file">Optionally, attach a file:</label>
+                    <input type="file" name="upload">
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
                 </form>
             </div>
         </section>
