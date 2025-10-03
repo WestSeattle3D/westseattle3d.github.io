@@ -2,9 +2,21 @@ class MeshAnimation {
     constructor() {
         this.canvas = document.getElementById('mesh-canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.particles = [];
-        this.mouse = { x: 0, y: 0 };
+        this.scrollX = 0;
         this.scrollY = 0;
+        this.scrollZ = 0;
+        this.rotation = { x: 0.0, y: 0.5, z: 0 };
+
+        this.vertices = [
+            [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+            [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]
+        ];
+
+        this.edges = [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7]
+        ];
 
         this.init();
         this.bindEvents();
@@ -13,7 +25,6 @@ class MeshAnimation {
 
     init() {
         this.resizeCanvas();
-        this.createParticles();
     }
 
     resizeCanvas() {
@@ -21,32 +32,9 @@ class MeshAnimation {
         this.canvas.height = window.innerHeight;
     }
 
-    createParticles() {
-        this.particles = [];
-        const numParticles = 50;
-
-        for (let i = 0; i < numParticles; i++) {
-            this.particles.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                size: Math.random() * 2 + 1,
-                originalX: Math.random() * this.canvas.width,
-                originalY: Math.random() * this.canvas.height
-            });
-        }
-    }
-
     bindEvents() {
         window.addEventListener('resize', () => {
             this.resizeCanvas();
-            this.createParticles();
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            this.mouse.x = e.clientX;
-            this.mouse.y = e.clientY;
         });
 
         window.addEventListener('scroll', () => {
@@ -54,58 +42,75 @@ class MeshAnimation {
         });
     }
 
-    drawConnections() {
-        this.ctx.strokeStyle = '#ffeb3b';
-        this.ctx.lineWidth = 0.5;
+    rotateX(point, angle) {
+        const [x, y, z] = point;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        return [x, y * cos - z * sin, y * sin + z * cos];
+    }
 
-        for (let i = 0; i < this.particles.length; i++) {
-            for (let j = i + 1; j < this.particles.length; j++) {
-                const dx = this.particles[i].x - this.particles[j].x;
-                const dy = this.particles[i].y - this.particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+    rotateY(point, angle) {
+        const [x, y, z] = point;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        return [x * cos + z * sin, y, -x * sin + z * cos];
+    }
 
-                if (distance < 150) {
-                    const opacity = (150 - distance) / 150 * 0.3;
-                    this.ctx.globalAlpha = opacity;
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-                    this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.stroke();
-                }
-            }
-        }
-        this.ctx.globalAlpha = 1;
+    rotateZ(point, angle) {
+        const [x, y, z] = point;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        return [x * cos - y * sin, x * sin + y * cos, z];
+    }
+
+    project(point) {
+        const scale = 140;
+        const distance = 5;
+        const [x, y, z] = point;
+        const factor = distance / (distance + z);
+        return [
+            x * factor * scale + this.canvas.width / 2,
+            y * factor * scale + this.canvas.height * 0.45
+        ];
     }
 
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        const parallaxOffset = this.scrollY * 0.3;
+        this.rotation.y = this.scrollY * 0.005 + 0.0;
 
-        this.particles.forEach(particle => {
-            const mouseDistance = Math.sqrt(
-                Math.pow(this.mouse.x - particle.x, 2) +
-                Math.pow(this.mouse.y - particle.y, 2)
-            );
+        const rotatedVertices = this.vertices.map(vertex => {
+            let point = this.rotateX(vertex, this.rotation.x);
+            point = this.rotateY(point, this.rotation.y);
+            point = this.rotateZ(point, this.rotation.z);
+            return point;
+        });
 
-            const mouseInfluence = Math.max(0, (100 - mouseDistance) / 100) * 2;
+        const projectedVertices = rotatedVertices.map(vertex => this.project(vertex));
 
-            particle.x += particle.vx + mouseInfluence * (this.mouse.x - particle.x) * 0.001;
-            particle.y += particle.vy + mouseInfluence * (this.mouse.y - particle.y) * 0.001 + parallaxOffset * 0.01;
+        this.ctx.strokeStyle = '#86780cff';
+        this.ctx.lineWidth = 2;
+        this.ctx.globalAlpha = 0.8;
 
-            if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
-            if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
+        this.edges.forEach(([start, end]) => {
+            const [x1, y1] = projectedVertices[start];
+            const [x2, y2] = projectedVertices[end];
 
-            particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
-            particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
-
-            this.ctx.fillStyle = '#ffeb3b';
             this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.ctx.moveTo(x1, y1);
+            this.ctx.lineTo(x2, y2);
+            this.ctx.stroke();
+        });
+
+        this.ctx.fillStyle = '#ffeb3b';
+        projectedVertices.forEach(([x, y]) => {
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
             this.ctx.fill();
         });
 
-        this.drawConnections();
+        this.ctx.globalAlpha = 1;
+
         requestAnimationFrame(() => this.animate());
     }
 }
