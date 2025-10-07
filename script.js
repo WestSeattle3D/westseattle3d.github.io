@@ -2,10 +2,13 @@ class MeshAnimation {
     constructor() {
         this.canvas = document.getElementById('mesh-canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.scrollX = 0;
         this.scrollY = 0;
-        this.scrollZ = 0;
-        this.rotation = { x: 0.0, y: 0.5, z: 0 };
+        this.targetRotationY = 0.0;
+        this.targetRotationZ = 0.0;
+        this.currentRotationY = 0.0;
+        this.currentRotationZ = 0.0;
+        this.rotation = { x: 0.0, y: 0.0, z: 0 };
+        this.easingFactor = 0.08;
 
         this.vertices = [
             [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
@@ -39,6 +42,8 @@ class MeshAnimation {
 
         window.addEventListener('scroll', () => {
             this.scrollY = window.scrollY;
+            this.targetRotationY = this.scrollY * 0.002;
+            this.targetRotationZ = this.scrollY * 0.001;
         });
     }
 
@@ -77,7 +82,11 @@ class MeshAnimation {
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.rotation.y = this.scrollY * 0.005 + 0.0;
+        // Smooth easing interpolation
+        this.currentRotationY += (this.targetRotationY - this.currentRotationY) * this.easingFactor;
+        this.currentRotationZ += (this.targetRotationZ - this.currentRotationZ) * this.easingFactor;
+        this.rotation.y = this.currentRotationY;
+        this.rotation.z = this.currentRotationZ;
 
         const rotatedVertices = this.vertices.map(vertex => {
             let point = this.rotateX(vertex, this.rotation.x);
