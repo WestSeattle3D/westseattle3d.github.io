@@ -24,7 +24,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: linear-gradient(135deg, #000 0%, #333 100%);
+    background: linear-gradient(135deg, #000 0%, #002108 100%);
 }
 
 #mesh-canvas {
@@ -40,7 +40,7 @@ body {
     position: relative;
     z-index: 2;
     text-align: center;
-    color: #fff;
+    color: #f8f8f8;
     max-width: 800px;
     padding: 2rem;
 }
@@ -54,7 +54,7 @@ body {
 
 .hero-content p {
     font-size: 1.5rem;
-    color: #ffeb3b;
+    color: #ffef7f;
     font-weight: 300;
     letter-spacing: 1px;
     margin-top: 2rem;
@@ -67,7 +67,7 @@ body {
 }
 
 .accent-section {
-    background: #ffeb3b;
+    background: #ffef7f;
     color: #000;
 }
 
@@ -98,7 +98,7 @@ h2 {
 .service-item {
     background: #f8f8f8;
     padding: 2rem;
-    border-left: 4px solid #ffeb3b;
+    border-left: 4px solid #ffef7f;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -131,7 +131,7 @@ h2 {
 .advantage {
     text-align: center;
     padding: 2rem;
-    background: rgba(0,0,0,0.05);
+    background: #f5cc20;
     border-radius: 8px;
 }
 
@@ -152,7 +152,7 @@ h2 {
     margin: 0 auto;
     background: #f8f8f8;
     padding: 3rem;
-    border: 2px solid #ffeb3b;
+    border: 2px solid #f5cc20;
 }
 
 .form-group {
@@ -172,7 +172,7 @@ h2 {
     font-family: monospace;
     width: 100%;
     padding: 1rem;
-    border: 2px solid #ddd;
+    border: 2px solid #f5cc20;
     background: #fff;
     font-size: 1rem;
     transition: border-color 0.3s ease;
@@ -181,13 +181,13 @@ h2 {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #ffeb3b;
+    border-color: #3a1a02;
 }
 
 .submit-btn {
     font-family: Tahoma, sans-serif;
-    background: #000;
-    color: #fff;
+    background: #f5cc20;
+    color: #3a1a02;
     padding: 1rem 3rem;
     border: none;
     font-size: 1.1rem;
@@ -199,13 +199,12 @@ h2 {
 }
 
 .submit-btn:hover {
-    background: #ffeb3b;
-    color: #000;
-    transform: translateY(-2px);
+    background: #3a1a02;
+    color: #f8f8f8;
 }
 
 .footer {
-    background: #000;
+    background: #3a1a02;
     color: #fff;
     padding: 2rem 0;
     text-align: center;

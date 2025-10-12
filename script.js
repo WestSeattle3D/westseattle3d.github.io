@@ -97,9 +97,9 @@ class MeshAnimation {
 
         const projectedVertices = rotatedVertices.map(vertex => this.project(vertex));
 
-        this.ctx.strokeStyle = '#86780cff';
+        this.ctx.strokeStyle = '#f5cc20';
         this.ctx.lineWidth = 2;
-        this.ctx.globalAlpha = 0.8;
+        this.ctx.globalAlpha = 0.5;
 
         this.edges.forEach(([start, end]) => {
             const [x1, y1] = projectedVertices[start];
@@ -111,7 +111,7 @@ class MeshAnimation {
             this.ctx.stroke();
         });
 
-        this.ctx.fillStyle = '#ffeb3b';
+        this.ctx.fillStyle = '#ffef7f';
         projectedVertices.forEach(([x, y]) => {
             this.ctx.beginPath();
             this.ctx.arc(x, y, 3, 0, Math.PI * 2);
