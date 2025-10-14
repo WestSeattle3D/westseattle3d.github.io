@@ -18,7 +18,8 @@ body {
 }
 
 .hero {
-    height: 100vh;
+    height: 100vh; /* Fallback for browsers that don't support custom properties */
+    height: var(--vh, 100vh);
     position: relative;
     display: flex;
     align-items: center;

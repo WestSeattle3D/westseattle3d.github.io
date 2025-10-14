@@ -145,6 +145,18 @@ class SmoothScroll {
     }
 }
 
+// Fix for mobile viewport height (prevents hero section from jumping when toolbar shows/hides)
+function setViewportHeight() {
+    const vh = window.innerHeight;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Set on load
+setViewportHeight();
+
+// Update on resize (but this won't fire on scroll when toolbar appears/disappears, which is what we want)
+window.addEventListener('resize', setViewportHeight);
+
 document.addEventListener('DOMContentLoaded', () => {
     new MeshAnimation();
     new ContactForm();
