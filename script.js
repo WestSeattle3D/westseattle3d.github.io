@@ -145,6 +145,55 @@ class SmoothScroll {
     }
 }
 
+class Gallery {
+    constructor() {
+        this.lightbox = document.getElementById('lightbox');
+        this.lightboxImg = document.getElementById('lightbox-img');
+        this.lightboxTitle = document.getElementById('lightbox-title');
+        this.closeBtn = document.querySelector('.lightbox-close');
+        this.bindEvents();
+    }
+
+    bindEvents() {
+        const galleryImages = document.querySelectorAll('.gallery-img');
+
+        galleryImages.forEach(img => {
+            img.addEventListener('click', () => {
+                this.openLightbox(img.src, img.alt);
+            });
+        });
+
+        this.closeBtn.addEventListener('click', () => {
+            this.closeLightbox();
+        });
+
+        this.lightbox.addEventListener('click', (e) => {
+            if (e.target === this.lightbox) {
+                this.closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.lightbox.style.display === 'block') {
+                this.closeLightbox();
+            }
+        });
+    }
+
+    openLightbox(src, alt) {
+        this.lightbox.style.display = 'block';
+        this.lightboxImg.src = src;
+        this.lightboxImg.alt = alt;
+        this.lightboxTitle.textContent = alt;
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeLightbox() {
+        this.lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
 // Fix for mobile viewport height (prevents hero section from jumping when toolbar shows/hides)
 function setViewportHeight() {
     const vh = window.innerHeight;
@@ -159,8 +208,8 @@ window.addEventListener('resize', setViewportHeight);
 
 document.addEventListener('DOMContentLoaded', () => {
     new MeshAnimation();
-    new ContactForm();
     new SmoothScroll();
+    new Gallery();
 
     const observerOptions = {
         threshold: 0.1,

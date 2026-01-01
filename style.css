@@ -204,6 +204,122 @@ h2 {
     color: #f8f8f8;
 }
 
+.gallery-section {
+    padding: 3rem 0 2rem;
+    background: #002108;
+}
+
+.gallery-section h2 {
+    color: #ffef7f;
+    margin-bottom: 2rem;
+}
+
+.gallery-strip {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 2rem 2rem;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.gallery-strip::-webkit-scrollbar {
+    height: 8px;
+}
+
+.gallery-strip::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.gallery-strip::-webkit-scrollbar-thumb {
+    background: #f5cc20;
+    border-radius: 4px;
+}
+
+.gallery-strip::-webkit-scrollbar-thumb:hover {
+    background: #ffef7f;
+}
+
+.gallery-img {
+    height: 200px;
+    width: auto;
+    object-fit: cover;
+    cursor: pointer;
+    border: 3px solid #f5cc20;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.gallery-img:hover {
+    border-color: #ffef7f;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(245, 204, 32, 0.3);
+}
+
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    animation: fadeIn 0.3s ease;
+    color: #ffef7f;
+}
+
+.lightbox-title {
+    color: #ffef7f;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.lightbox-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border: 4px solid #f5cc20;
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10000;
+    line-height: 1;
+    user-select: none;
+}
+
+.lightbox-close:hover {
+    color: #f5cc20;
+}
+
 .footer {
     background: #002108;
     color: #fff;
@@ -243,5 +359,25 @@ h2 {
 
     h2 {
         font-size: 2rem;
+    }
+
+    .gallery-strip {
+        padding: 1rem 1rem 2rem;
+    }
+
+    .gallery-img {
+        height: 150px;
+    }
+
+    .lightbox-close {
+        top: 1rem;
+        right: 1rem;
+        font-size: 2.5rem;
+    }
+
+    .lightbox-content {
+        max-width: 95%;
+        max-height: 95%;
+        border: 2px solid #f5cc20;
     }
 }
