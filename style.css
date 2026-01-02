@@ -260,7 +260,7 @@ h2 {
 .lightbox {
     display: none;
     position: fixed;
-    z-index: 9999;
+    z-index: 1000;
     top: 0;
     left: 0;
     width: 100%;
@@ -272,18 +272,18 @@ h2 {
 
 .lightbox-title {
     position: absolute;
-    bottom: 0;
+    top: 0;
+    bottom: auto;
     left: 0;
     width: 100%;
     color: #ffef7f;
     text-align: center;
     background: #000000aa;
-    padding: 1rem;
+    padding: 0.8rem;
     margin: 0;
-    z-index: 10001;
+    z-index: 1100;
     font-size: 1.5rem;
     font-weight: 400;
-    letter-spacing: 0.5px;
 }
 
 @keyframes fadeIn {
@@ -311,7 +311,7 @@ h2 {
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s ease;
-    z-index: 10000;
+    z-index: 1200;
     line-height: 1;
     user-select: none;
 }

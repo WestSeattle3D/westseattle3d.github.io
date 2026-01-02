@@ -248,11 +248,6 @@ class Gallery {
         this.lightboxImg.alt = image.alt;
         this.lightboxTitle.textContent = image.alt;
         document.body.style.overflow = 'hidden';
-
-        // Position on image load
-        this.lightboxImg.onload = () => {
-            this.positionTitle();
-        };
     }
 
     closeLightbox() {
@@ -275,21 +270,6 @@ class Gallery {
         this.lightboxImg.src = image.src;
         this.lightboxImg.alt = image.alt;
         this.lightboxTitle.textContent = image.alt;
-
-        // Position title at bottom of image after it loads
-        this.lightboxImg.onload = () => {
-            this.positionTitle();
-        };
-    }
-
-    positionTitle() {
-        const imgRect = this.lightboxImg.getBoundingClientRect();
-        const imgBottom = imgRect.bottom;
-        const titleHeight = this.lightboxTitle.offsetHeight;
-
-        // Position title at the bottom of the image
-        this.lightboxTitle.style.top = `${imgBottom - titleHeight}px`;
-        this.lightboxTitle.style.bottom = 'auto';
     }
 }
 
