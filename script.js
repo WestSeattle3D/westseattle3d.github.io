@@ -151,15 +151,22 @@ class Gallery {
         this.lightboxImg = document.getElementById('lightbox-img');
         this.lightboxTitle = document.getElementById('lightbox-title');
         this.closeBtn = document.querySelector('.lightbox-close');
+        this.images = [];
+        this.currentIndex = 0;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
         this.bindEvents();
     }
 
     bindEvents() {
         const galleryImages = document.querySelectorAll('.gallery-img');
 
-        galleryImages.forEach(img => {
+        // Build images array
+        galleryImages.forEach((img, index) => {
+            this.images.push({ src: img.src, alt: img.alt });
             img.addEventListener('click', () => {
-                this.openLightbox(img.src, img.alt);
+                this.currentIndex = index;
+                this.openLightbox();
             });
         });
 
@@ -173,24 +180,116 @@ class Gallery {
             }
         });
 
+        // Click navigation on image
+        this.lightboxImg.addEventListener('click', (e) => {
+            const rect = this.lightboxImg.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const imageWidth = rect.width;
+
+            if (clickX < imageWidth / 2) {
+                // Clicked on left side - go to previous image
+                this.previousImage();
+            } else {
+                // Clicked on right side - go to next image
+                this.nextImage();
+            }
+        });
+
+        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.lightbox.style.display === 'block') {
-                this.closeLightbox();
+            if (this.lightbox.style.display === 'block') {
+                if (e.key === 'Escape') {
+                    this.closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    this.previousImage();
+                } else if (e.key === 'ArrowRight') {
+                    this.nextImage();
+                }
+            }
+        });
+
+        // Touch events for swipe
+        this.lightbox.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        this.lightbox.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe();
+        }, { passive: true });
+
+        // Reposition title on window resize
+        window.addEventListener('resize', () => {
+            if (this.lightbox.style.display === 'block') {
+                this.positionTitle();
             }
         });
     }
 
-    openLightbox(src, alt) {
+    handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = this.touchStartX - this.touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swiped left - show next image
+                this.nextImage();
+            } else {
+                // Swiped right - show previous image
+                this.previousImage();
+            }
+        }
+    }
+
+    openLightbox() {
+        const image = this.images[this.currentIndex];
         this.lightbox.style.display = 'block';
-        this.lightboxImg.src = src;
-        this.lightboxImg.alt = alt;
-        this.lightboxTitle.textContent = alt;
+        this.lightboxImg.src = image.src;
+        this.lightboxImg.alt = image.alt;
+        this.lightboxTitle.textContent = image.alt;
         document.body.style.overflow = 'hidden';
+
+        // Position on image load
+        this.lightboxImg.onload = () => {
+            this.positionTitle();
+        };
     }
 
     closeLightbox() {
         this.lightbox.style.display = 'none';
         document.body.style.overflow = 'auto';
+    }
+
+    nextImage() {
+        this.currentIndex = (this.currentIndex + 1) % this.images.length;
+        this.updateImage();
+    }
+
+    previousImage() {
+        this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+        this.updateImage();
+    }
+
+    updateImage() {
+        const image = this.images[this.currentIndex];
+        this.lightboxImg.src = image.src;
+        this.lightboxImg.alt = image.alt;
+        this.lightboxTitle.textContent = image.alt;
+
+        // Position title at bottom of image after it loads
+        this.lightboxImg.onload = () => {
+            this.positionTitle();
+        };
+    }
+
+    positionTitle() {
+        const imgRect = this.lightboxImg.getBoundingClientRect();
+        const imgBottom = imgRect.bottom;
+        const titleHeight = this.lightboxTitle.offsetHeight;
+
+        // Position title at the bottom of the image
+        this.lightboxTitle.style.top = `${imgBottom - titleHeight}px`;
+        this.lightboxTitle.style.bottom = 'auto';
     }
 }
 
